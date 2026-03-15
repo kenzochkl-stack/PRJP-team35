@@ -122,6 +122,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   option: { padding: 14, borderBottomWidth: 1, borderColor: "#eee" },
+
   optionText: { color: COLORS.primary },
   button: {
     marginTop: 40,
