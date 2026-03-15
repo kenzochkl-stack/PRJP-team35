@@ -1,12 +1,13 @@
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity,Dimensions, StyleSheet,Image } from "react-native";
 import { useRouter } from "expo-router";
 import { COLORS } from "../../src/styles/colors";
-
+const { width } = Dimensions.get("window");
 export default function AuthLanding() {
   const router = useRouter();
 
   return (
     <View style={styles.container}>
+      
       <TouchableOpacity
         style={styles.button}
         onPress={() => router.push("/login")}
@@ -16,7 +17,7 @@ export default function AuthLanding() {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => router.push("/register")}
+        onPress={() => router.push("/(auth)/signup-slides")}
       >
         <Text style={styles.buttonText}>S’inscrire</Text>
       </TouchableOpacity>
@@ -38,10 +39,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 16,
+    
+  
   },
   buttonText: {
-    color: "#fff",
+    color: "#ffffffff",
     fontSize: 16,
     fontWeight: "600",
   },
+  appLogo : {
+    height: 210,
+    width: width,
+    
+  }
 });

@@ -4,13 +4,12 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Image
+  Image,
 } from "react-native";
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import { COLORS } from "../../src/styles/colors";
-import {FaEye} from "react-icons/fa6";
-
+import { useLocalSearchParams } from "expo-router";
 
 export default function ResetPassword() {
   const router = useRouter();
@@ -18,80 +17,151 @@ export default function ResetPassword() {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const { email } = useLocalSearchParams();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleReset = async () => {
+    if (!password || !confirm) {
+      setError("Veuillez remplir tous les champs");
+      return;
+    }
+
+    if (password !== confirm) {
+      setError("Les mots de passe ne correspondent pas");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError("");
+
+      const response = await fetch(
+        "https://your-backend.com/api/auth/reset-password",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+            newPassword: password,
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || "Erreur lors de la réinitialisation");
+        return;
+      }
+
+      router.replace("/login");
+    } catch (err) {
+      console.log(err);
+      setError("Erreur réseau");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
       {/* Back */}
       <TouchableOpacity onPress={() => router.back()} style={styles.back}>
-        <Image src=""/>
+        <Image source={require("../../assets/icons/chevron_backward2.png")} />
       </TouchableOpacity>
 
-      {/* Title */}
-      <Text style={styles.title}>Nouveau mot de passe</Text>
+      <View style={styles.secondaryContainer}>
+        {/* Title */}
+        <Text style={styles.title}>Nouveau mot de passe</Text>
 
-      <Text style={styles.desc}>
-        Veuillez définir un nouveau mot de passe sécurisé pour votre compte.
-      </Text>
+        <Text style={styles.desc}>
+          Veuillez définir un nouveau mot de passe sécurisé pour votre compte.
+        </Text>
 
-      {/* Password */}
-      <View style={styles.field}>
-        <Text style={styles.label}>Mot de passe</Text>
-        <View style={styles.inputWrapper}>
-          <TextInput
-            style={styles.input}
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry={!showPassword}
-          />
-          <TouchableOpacity
-            onPress={() => setShowPassword(!showPassword)}
-          >
-            <Text style={styles.eye}>
-              {showPassword ? <FaEye/> : "👁️"}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {/* Confirm */}
-      <View style={styles.field}>
-        <Text style={styles.label}>Confirmer le mot de passe</Text>
-        <View style={styles.inputWrapper}>
+        {/* Password */}
+        <View style={styles.field}>
+          <Text style={styles.label}>Mot de passe</Text>
+          <View style={styles.inputWrapper}>
             <TextInput
-          style={styles.input}
-          value={confirm}
-          onChangeText={setConfirm}
-          secureTextEntry={!showPassword}
-        />
+              style={styles.input}
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!showPassword}
+            />
+            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+              <Text style={styles.eye}>
+                {showPassword ? (
+                  <Image
+                    source={require("../../assets/icons/visibility_off_gray.png")}
+                    style={{ width: 20, height: 20 }}
+                  />
+                ) : (
+                  <Image
+                    source={require("../../assets/icons/visibility_gray.png")}
+                    style={{ width: 20, height: 20 }}
+                  />
+                )}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        
-      </View>
 
-      {/* Submit */}
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>CONFIRMER</Text>
-      </TouchableOpacity>
+        {/* Confirm */}
+        <View style={styles.field}>
+          <Text style={styles.label}>Confirmer le mot de passe</Text>
+          <View style={styles.inputWrapper}>
+            <TextInput
+              style={styles.input}
+              value={confirm}
+              onChangeText={setConfirm}
+              secureTextEntry={!showPassword}
+            />
+          </View>
+        </View>
+
+        {/* Submit */}
+        {error ? (
+          <Text style={{ color: "red", marginTop: 10 }}>{error}</Text>
+        ) : null}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleReset}
+          disabled={loading}
+        >
+          <Text style={styles.buttonText}>{loading ? "..." : "CONFIRMER"}</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 75,
+    paddingTop: 30,
+
     backgroundColor: "#fff",
+  },
+
+  secondaryContainer: {
+    flex: 1,
+    paddingTop: 45,
   },
 
   back: {
     marginTop: 10,
     width: 40,
-  },
-
-  backText: {
-    fontSize: 28,
-    color: COLORS.text,
+    height: 40,
+    borderWidth: 2,
+    borderStyle: "solid",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    borderColor: "#828282ff",
   },
 
   title: {
