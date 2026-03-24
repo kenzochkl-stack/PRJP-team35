@@ -61,7 +61,8 @@ export default function SignupProfile() {
           onChangeText={setPostal}
           keyboardType="number-pad"
         />
-        {/* STATUS */} <Text style={styles.label}>Status</Text>
+        {/* STATUS */}
+         <Text style={styles.label}>Status</Text>
         <TouchableOpacity style={styles.input} onPress={() => setOpen(!open)}>
           <Text style={{ color: status ? "#000" : "#999" }}>
             {status || "Choisir"}
@@ -78,14 +79,14 @@ export default function SignupProfile() {
                   setOpen(false);
                 }}
               >
-                <Text style={styles.optionText}> {item} </Text>
+                <Text style={styles.optionText}>{item}</Text>
               </TouchableOpacity>
             ))}
           </View>
         )}
         {/* BUTTON */}
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}> Continuer </Text>
+          <Text style={styles.buttonText}>Continuer </Text>
         </TouchableOpacity>
       </View>
     </View>

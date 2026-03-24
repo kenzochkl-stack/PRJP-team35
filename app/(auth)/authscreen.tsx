@@ -1,5 +1,5 @@
-import { View, Text, TouchableOpacity,Dimensions, StyleSheet,Image } from "react-native";
 import { useRouter } from "expo-router";
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { COLORS } from "../../src/styles/colors";
 const { width } = Dimensions.get("window");
 export default function AuthLanding() {
