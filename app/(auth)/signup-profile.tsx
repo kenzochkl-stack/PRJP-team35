@@ -1,13 +1,13 @@
+import { useRouter } from "expo-router";
+import { useState } from "react";
 import {
-  View,
+  Image,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
-  Image,
+  View,
 } from "react-native";
-import { useRouter } from "expo-router";
-import { useState } from "react";
 import { COLORS } from "../../src/styles/colors";
 export default function SignupProfile() {
   const router = useRouter();
@@ -78,14 +78,14 @@ export default function SignupProfile() {
                   setOpen(false);
                 }}
               >
-                <Text style={styles.optionText}> {item} </Text>
+                <Text style={styles.optionText}>{item}</Text>
               </TouchableOpacity>
             ))}
           </View>
         )}
         {/* BUTTON */}
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}> Continuer </Text>
+          <Text style={styles.buttonText}>Continuer</Text>
         </TouchableOpacity>
       </View>
     </View>
