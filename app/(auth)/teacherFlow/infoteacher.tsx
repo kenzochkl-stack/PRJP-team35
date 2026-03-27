@@ -77,7 +77,7 @@ export default function InfoTeacher() {
         keyboardShouldPersistTaps="always"
       >
         <TouchableOpacity onPress={() => router.back()} style={styles.back}>
-          <Image style={styles.backIcon} source={require("../../assets/icons/chevron_backward2.png")} />
+          <Image style={styles.backIcon} source={require("../../../assets/icons/chevron_backward2.png")} />
         </TouchableOpacity>
 
         <Text style={styles.title}>Encore quelques informations...</Text>
@@ -116,7 +116,7 @@ export default function InfoTeacher() {
               <Text style={{ color: selectedWilaya ? '#000' : '#999' }}>
                 {selectedWilaya || "Sélectionner..."}
               </Text>
-              <Image source={require('../../assets/images/arrowbas.png')} style={styles.arrowIcon} />
+              <Image source={require('../../../assets/images/arrowbas.png')} style={styles.arrowIcon} />
             </View>
           </TouchableOpacity>
 
@@ -155,7 +155,7 @@ export default function InfoTeacher() {
               ) : (
                 <Text style={{ color: selectedCommune ? '#000' : '#999' }}>{selectedCommune || "Sélectionner..."}</Text>
               )}
-              <Image source={require('../../assets/images/arrowbas.png')} style={styles.arrowIcon} />
+              <Image source={require('../../../assets/images/arrowbas.png')} style={styles.arrowIcon} />
             </View>
           </TouchableOpacity>
 
@@ -192,12 +192,12 @@ export default function InfoTeacher() {
                 return;
                 }
                 router.push({
-                pathname: "/(auth)/descteacher",
+                pathname: "/(auth)/teacherFlow/descteacher" as any,
                 params: { ...previousParams, nature: selectedNature, modalite: selectedModalite, deplacement: selectedDeplacement, wilaya: selectedWilaya, commune: selectedCommune }
                 });
             }}
             >
-            <Image style={styles.nextIcon} source={require("../../assets/images/arrow.png")} />
+            <Image style={styles.nextIcon} source={require("../../../assets/images/arrow.png")} />
             </TouchableOpacity>
         </View>
       </ScrollView>

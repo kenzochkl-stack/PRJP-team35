@@ -49,7 +49,7 @@ export default function Salut() {
         <TouchableOpacity onPress={() => router.back()} style={styles.back}>
           <Image
             style={styles.backIcon}
-            source={require("../../assets/icons/chevron_backward2.png")}
+            source={require("../../../assets/icons/chevron_backward2.png")}
           />
         </TouchableOpacity>
 

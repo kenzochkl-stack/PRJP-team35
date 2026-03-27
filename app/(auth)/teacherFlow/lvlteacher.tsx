@@ -1,28 +1,36 @@
-import { View, Text, StyleSheet, Pressable, Dimensions, Image, TouchableOpacity } from 'react-native';
-import { useState } from 'react';
-import { useRouter } from 'expo-router';
-import { COLORS } from "../../src/styles/colors";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import { useState } from "react";
+import { useRouter } from "expo-router";
+import { COLORS } from "../../../src/styles/colors";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 const guidelineBaseWidth = 412;
 const scale = (size: number) => (width / guidelineBaseWidth) * size;
 
 export default function Explore() {
   const router = useRouter();
-  
+
   // On stocke les "values" (Primaire, Moyen, Secondaire, ESI)
   const [selected, setSelected] = useState<string[]>([]);
 
   const levelsMap = [
     { label: "Primaire", value: "Primaire" },
-    { label: "Collège", value: "Moyen" },      
-    { label: "Lycée", value: "Secondaire" },   
-    { label: "Université", value: "ESI" },   
+    { label: "Collège", value: "Moyen" },
+    { label: "Lycée", value: "Secondaire" },
+    { label: "Université", value: "ESI" },
   ];
 
   const toggleSelection = (val: string) => {
     if (selected.includes(val)) {
-      setSelected(selected.filter(i => i !== val));
+      setSelected(selected.filter((i) => i !== val));
     } else {
       setSelected([...selected, val]);
     }
@@ -36,7 +44,7 @@ export default function Explore() {
           style={styles.backIcon}
           source={require("../../assets/icons/chevron_backward2.png")}
         />
-      </TouchableOpacity> 
+      </TouchableOpacity>
 
       <Text style={styles.title}>Quel(s) niveau(x) enseignez-vous ?</Text>
 
@@ -47,7 +55,11 @@ export default function Explore() {
           onPress={() => toggleSelection(item.value)}
           style={[
             styles.button,
-            { backgroundColor: selected.includes(item.value) ? '#D785FF' : COLORS.primary }
+            {
+              backgroundColor: selected.includes(item.value)
+                ? "#D785FF"
+                : COLORS.primary,
+            },
           ]}
         >
           <Text style={styles.buttontext}>{item.label}</Text>
@@ -60,14 +72,15 @@ export default function Explore() {
           style={styles.nextArrow}
           onPress={() => {
             router.push({
-              pathname: "/subjctteacher", 
-              params: { levels: selected.join(',') } // Envoie les valeurs techniques (ex: "Secondaire,ESI")
+              // @ts-ignore
+              pathname: "/(auth)/teacherFlow/subjctteacher",
+              params: { levels: selected.join(",") }, // Envoie les valeurs techniques (ex: "Secondaire,ESI")
             });
           }}
         >
           <Image
             style={styles.nextIcon}
-            source={require('../../assets/images/arrow.png')}
+            source={require("../../assets/images/arrow.png")}
           />
         </Pressable>
       )}
@@ -79,7 +92,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 34,
-    backgroundColor: "#fff" 
+    backgroundColor: "#fff",
   },
 
   back: {
@@ -93,17 +106,17 @@ const styles = StyleSheet.create({
     borderColor: "#D8DADC",
   },
 
-  backIcon: { 
+  backIcon: {
     width: 20,
-    height: 30 
+    height: 30,
   },
 
   title: {
-    fontFamily: 'SchibstedGrotesk',
-    fontWeight: 'bold',
+    fontFamily: "SchibstedGrotesk",
+    fontWeight: "bold",
     fontSize: scale(27),
-    color: 'black',
-    textAlign: 'center',
+    color: "black",
+    textAlign: "center",
     marginTop: scale(60),
     marginBottom: scale(100),
   },
@@ -112,33 +125,33 @@ const styles = StyleSheet.create({
     borderRadius: scale(12),
     width: scale(344),
     height: scale(60),
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginBottom: scale(35),
   },
 
   buttontext: {
-    color: 'white',
-    fontFamily: 'SchibstedGrotesk',
-    fontWeight: 'bold',
+    color: "white",
+    fontFamily: "SchibstedGrotesk",
+    fontWeight: "bold",
     fontSize: scale(18),
     padding: 0,
   },
 
   nextArrow: {
-    position: 'absolute',
+    position: "absolute",
     bottom: scale(40),
     right: scale(30),
     width: scale(60),
     height: scale(60),
-    backgroundColor: '#9F54F8',
+    backgroundColor: "#9F54F8",
     borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     shadowColor: "#000",
-    shadowOffset: { 
-      width: 0, 
-      height: 2 
+    shadowOffset: {
+      width: 0,
+      height: 2,
     },
     shadowOpacity: 0.3,
     shadowRadius: 3,
@@ -148,6 +161,6 @@ const styles = StyleSheet.create({
   nextIcon: {
     width: scale(30),
     height: scale(30),
-    tintColor: '#fff',
+    tintColor: "#fff",
   },
 });

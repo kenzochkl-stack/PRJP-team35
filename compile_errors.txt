@@ -1,0 +1,8 @@
+app/(auth)/studentFlow/student-image.tsx(1,30): error TS2307: Cannot find module 'expo-image-picker' or its corresponding type declarations.
+app/(auth)/studentFlow/student-image.tsx(12,24): error TS2307: Cannot find module '../../../../src/styles/colors' or its corresponding type declarations.
+app/(auth)/studentFlow/student-year-spec.tsx(10,24): error TS2307: Cannot find module '../../../../src/styles/colors' or its corresponding type declarations.
+app/(auth)/teacherFlow/lvlteacher.tsx(75,15): error TS2322: Type '"/(auth)/teacherFlow/subjctteacher"' is not assignable to type '"/(shared)/filters" | RelativePathString | ExternalPathString | "/" | "/_sitemap" | "/(auth)/authscreen" | "/authscreen" | "/(auth)/create-password" | ... 21 more ... | "/(teacher)/dashboard"'.
+app/(auth)/teacherFlow/prof-cv.tsx(2,33): error TS2307: Cannot find module 'expo-document-picker' or its corresponding type declarations.
+app/(auth)/teacherFlow/prof-cv.tsx(14,24): error TS2307: Cannot find module '../../../../src/styles/colors' or its corresponding type declarations.
+app/(auth)/teacherFlow/prof-diplome.tsx(1,33): error TS2307: Cannot find module 'expo-document-picker' or its corresponding type declarations.
+app/(auth)/teacherFlow/prof-image.tsx(1,30): error TS2307: Cannot find module 'expo-image-picker' or its corresponding type declarations.
