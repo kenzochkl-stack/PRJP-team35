@@ -1,18 +1,16 @@
-
-import { 
-  View, 
-  Text, 
-  TextInput, 
-  TouchableOpacity, 
-  StyleSheet, 
-  ActivityIndicator 
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 
 import { useRouter } from "expo-router";
 import { useState } from "react";
 
 export default function SignupContact() {
-
   const router = useRouter();
 
   const [email, setEmail] = useState("");
@@ -23,29 +21,27 @@ export default function SignupContact() {
   /* ---------------- SEND OTP ---------------- */
 
   const handleSignup = async () => {
-
     if (!email) {
       setError("Veuillez entrer votre email");
       return;
     }
 
     try {
-
       setLoading(true);
       setError("");
 
       const response = await fetch(
-        "https://your-backend.com/api/auth/send-otp",
+        "http://192.168.100.15:3000/api/auth/signup/send-otp",
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             email: email,
-            phone: phone
-          })
-        }
+            phone: phone,
+          }),
+        },
       );
 
       const data = await response.json();
@@ -61,32 +57,27 @@ export default function SignupContact() {
         pathname: "/(auth)/verification",
         params: {
           email: email,
-          mode: "signup"
-        }
+          phone: phone,
+          mode: "signup",
+        },
       });
-
     } catch (err) {
-
       console.log(err);
       setError("Erreur réseau");
-
     } finally {
-
       setLoading(false);
-
     }
   };
 
   return (
     <View style={styles.container}>
-
       <Text style={styles.title}>
-        Bienvenue a <Text style={styles.purple}>Proffind!</Text>
+        Bienvenue a <Text style={styles.purple}>Tutex!</Text>
       </Text>
 
       <Text style={styles.subtitle}>
-        Rejoignez <Text style={styles.purple}>nous</Text> et débloquez
-        votre potentiel !
+        Rejoignez <Text style={styles.purple}>nous</Text> et débloquez votre
+        potentiel !
       </Text>
 
       {/* EMAIL */}
@@ -104,7 +95,7 @@ export default function SignupContact() {
 
       {/* PHONE */}
 
-      <Text style={styles.label}>Phone Number</Text>
+      <Text style={styles.label}>Numéro de téléphone</Text>
 
       <TextInput
         placeholder="+213XXXXXXXXX"
@@ -116,9 +107,7 @@ export default function SignupContact() {
 
       {/* ERROR */}
 
-      {error ? (
-        <Text style={styles.error}>{error}</Text>
-      ) : null}
+      {error ? <Text style={styles.error}>{error}</Text> : null}
 
       {/* BUTTON */}
 
@@ -127,62 +116,52 @@ export default function SignupContact() {
         onPress={handleSignup}
         disabled={loading}
       >
-
         {loading ? (
           <ActivityIndicator color="#fff" />
         ) : (
-          <Text style={styles.buttonText}>
-            Create an account
-          </Text>
+          <Text style={styles.buttonText}>Créer un compte</Text>
         )}
-
       </TouchableOpacity>
 
       {/* LOGIN */}
 
-      <Text
-        style={styles.loginText}
-        onPress={() => router.replace("/login")}
-      >
-        Already have an account?{" "}
-        <Text style={styles.login}>Login</Text>
+      <Text style={styles.loginText} onPress={() => router.replace("/login")}>
+        Already have an account? <Text style={styles.login}>Login</Text>
       </Text>
-
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
     backgroundColor: "#fff",
     paddingHorizontal: 25,
-    paddingTop: 130
+    paddingTop: 130,
   },
 
   title: {
     fontSize: 34,
     fontWeight: "bold",
     textAlign: "center",
-    paddingBottom: 30
+    paddingBottom: 30,
   },
 
   purple: {
-    color: "#8B5CF6"
+    color: "#8B5CF6",
   },
 
   subtitle: {
     fontSize: 22,
     marginTop: 10,
     fontWeight: "600",
-    textAlign: "center"
+    textAlign: "center",
   },
 
   label: {
     marginTop: 30,
     marginBottom: 6,
-    fontSize: 14
+    fontSize: 14,
   },
 
   input: {
@@ -190,7 +169,7 @@ const styles = StyleSheet.create({
     borderColor: "#E5E5E5",
     borderRadius: 10,
     padding: 14,
-    fontSize: 14
+    fontSize: 14,
   },
 
   button: {
@@ -198,29 +177,27 @@ const styles = StyleSheet.create({
     backgroundColor: "#8B5CF6",
     padding: 16,
     borderRadius: 12,
-    alignItems: "center"
+    alignItems: "center",
   },
 
   buttonText: {
     color: "white",
-    fontWeight: "600"
+    fontWeight: "600",
   },
 
   error: {
     color: "red",
-    marginTop: 10
+    marginTop: 10,
   },
 
   loginText: {
     marginTop: 25,
     textAlign: "center",
-    color: "#777"
+    color: "#777",
   },
 
   login: {
     color: "#8B5CF6",
-    fontWeight: "600"
-  }
-
+    fontWeight: "600",
+  },
 });
-

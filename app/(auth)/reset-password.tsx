@@ -17,7 +17,7 @@ export default function ResetPassword() {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const { email } = useLocalSearchParams();
+  const { email, resetToken } = useLocalSearchParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -44,7 +44,7 @@ export default function ResetPassword() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: email,
+            resetToken,
             newPassword: password,
           }),
         },

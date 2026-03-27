@@ -1,4 +1,3 @@
-
 import {
   View,
   Text,
@@ -6,15 +5,14 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
-  Image
+  Image,
 } from "react-native";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { COLORS } from "../../src/styles/colors";
 
 export default function Login() {
-
   const router = useRouter();
 
   const [identifier, setIdentifier] = useState("");
@@ -26,29 +24,30 @@ export default function Login() {
   /* ---------------- LOGIN ---------------- */
 
   const handleLogin = async () => {
-
     if (!identifier || !password) {
       setError("Veuillez remplir tous les champs");
       return;
     }
 
     try {
-
       setLoading(true);
       setError("");
 
+      // Detect whether the identifier is an email or phone number
+      const isEmail = identifier.includes("@");
+      const payload = isEmail
+        ? { email: identifier, password }
+        : { phone: identifier, password };
+
       const response = await fetch(
-        "https://your-backend.com/api/auth/login",
+        "http://192.168.100.15:3000/api/auth/signin",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            identifier: identifier,
-            password: password,
-          }),
-        }
+          body: JSON.stringify(payload),
+        },
       );
 
       const data = await response.json();
@@ -59,33 +58,40 @@ export default function Login() {
       }
 
       /* SUCCESS */
+      const {
+        token,
+        data: { user, details },
+      } = data;
 
-      const token = data.token;
+      // Store token
+      await AsyncStorage.setItem("token", token);
 
-      // later you can store it using AsyncStorage
-      console.log("TOKEN:", token);
+      // Store user info if needed
+      await AsyncStorage.setItem("user", JSON.stringify(user));
 
-      router.replace(`/(student)/dashboard`);
-
+      // Route based on role
+      switch (user.role) {
+        case "student":
+          router.replace("/(student)/dashboard");
+          break;
+        case "parent":
+          router.replace("/(parent)/dashboard");
+          break;
+        case "teacher":
+          router.replace("/(teacher)/dashboard");
+          break;
+      }
     } catch (err) {
-
       console.log(err);
       setError("Erreur réseau");
-
     } finally {
-
       setLoading(false);
-
     }
-
   };
 
   return (
     <View style={styles.container}>
-
-      <Text style={styles.label}>
-        Email / numéro de téléphone
-      </Text>
+      <Text style={styles.label}>Email / numéro de téléphone</Text>
 
       <TextInput
         style={styles.input}
@@ -106,9 +112,7 @@ export default function Login() {
 
       {/* ERROR MESSAGE */}
 
-      {error ? (
-        <Text style={styles.error}>{error}</Text>
-      ) : null}
+      {error ? <Text style={styles.error}>{error}</Text> : null}
 
       {/* LOGIN BUTTON */}
 
@@ -117,50 +121,41 @@ export default function Login() {
         onPress={handleLogin}
         disabled={loading}
       >
-
         {loading ? (
           <ActivityIndicator color="#fff" />
         ) : (
-          <Text style={styles.buttonText}>
-            Se connecter
-          </Text>
+          <Text style={styles.buttonText}>Se connecter</Text>
         )}
-
       </TouchableOpacity>
 
-      <TouchableOpacity
-        onPress={() => router.push("/forgot-password")}
-      >
-        <Text style={styles.link}>
-          Mot de passe oublié ?
-        </Text>
+      <TouchableOpacity onPress={() => router.push("/forgot-password")}>
+        <Text style={styles.link}>Mot de passe oublié ?</Text>
       </TouchableOpacity>
 
       {/* DIVIDER */}
 
       <View style={styles.divider}>
-
         <View style={styles.line} />
 
         <Text style={styles.or}>OR</Text>
 
         <View style={styles.line} />
-
       </View>
 
       {/* GOOGLE BUTTON */}
 
       <TouchableOpacity style={styles.googleBtn}>
-        <Image source={require("../../assets/icons/Google.png")} style={styles.googleIcon}/>
+        <Image
+          source={require("../../assets/icons/Google.png")}
+          style={styles.googleIcon}
+        />
         <Text>Continue avec Google</Text>
       </TouchableOpacity>
-
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
     paddingTop: 175,
@@ -228,8 +223,8 @@ const styles = StyleSheet.create({
 
   googleBtn: {
     display: "flex",
-    flexDirection:"row",
-    gap:5,
+    flexDirection: "row",
+    gap: 5,
     height: 52,
     borderWidth: 1,
     borderColor: COLORS.border,
@@ -237,10 +232,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  googleIcon : {
-    
-    height:20,
-    width: 20
-  }
-
+  googleIcon: {
+    height: 20,
+    width: 20,
+  },
 });

@@ -6,35 +6,49 @@ import {
   StyleSheet,
   Image,
 } from "react-native";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { COLORS } from "../../src/styles/colors";
+
 export default function SignupProfile() {
   const router = useRouter();
+
+  const { email, phone, signupToken } = useLocalSearchParams();
+
   const [nom, setNom] = useState("");
   const [prenom, setPrenom] = useState("");
   const [postal, setPostal] = useState("");
   const [status, setStatus] = useState("");
   const [open, setOpen] = useState(false);
-  const statusOptions = ["Professeur", "Etudiant", "Parent"];
-  const handleSubmit = async () => {
+
+  const statusOptions = ["Professeur", "Etudiant", "parent"];
+
+  const handleSubmit = () => {
     if (!nom || !prenom || !postal || !status) return;
-    try {
-      const response = await fetch(
-        "https://your-backend.com/api/auth/complete-profile",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ nom, prenom, postal, status }),
-        },
-      );
-      const data = await response.json();
-      if (!response.ok) return;
-      router.replace("/(student)/dashboard");
-    } catch (err) {
-      console.log(err);
-    }
+    const statusRoutes = {
+      Etudiant: "/(student)/dashboard",
+      parent: "/(auth)/parentFlow/parentChildren",
+      Professeur: "/(teacher)/dashboard",
+    } as const;
+
+    const path = statusRoutes[status as keyof typeof statusRoutes];
+
+    if (!path) return;
+
+    router.push({
+      pathname: path,
+      params: {
+        email,
+        phone,
+        signupToken,
+        nom,
+        prenom,
+        postal,
+        role: status,
+      },
+    });
   };
+
   return (
     <View style={styles.container}>
       {/* Back */}
@@ -44,16 +58,19 @@ export default function SignupProfile() {
           source={require("../../assets/icons/chevron_backward2.png")}
         />
       </TouchableOpacity>
+
       {/* FORM */}
       <View style={styles.form}>
         <Text style={styles.label}>Nom</Text>
         <TextInput style={styles.input} value={nom} onChangeText={setNom} />
+
         <Text style={styles.label}>Prenom</Text>
         <TextInput
           style={styles.input}
           value={prenom}
           onChangeText={setPrenom}
         />
+
         <Text style={styles.label}>Code Postal</Text>
         <TextInput
           style={styles.input}
@@ -61,12 +78,15 @@ export default function SignupProfile() {
           onChangeText={setPostal}
           keyboardType="number-pad"
         />
-        {/* STATUS */} <Text style={styles.label}>Status</Text>
+
+        {/* STATUS */}
+        <Text style={styles.label}>Status</Text>
         <TouchableOpacity style={styles.input} onPress={() => setOpen(!open)}>
           <Text style={{ color: status ? "#000" : "#999" }}>
             {status || "Choisir"}
           </Text>
         </TouchableOpacity>
+
         {open && (
           <View style={styles.dropdown}>
             {statusOptions.map((item) => (
@@ -78,11 +98,12 @@ export default function SignupProfile() {
                   setOpen(false);
                 }}
               >
-                <Text style={styles.optionText}> {item} </Text>
+                <Text style={styles.optionText}>{item}</Text>
               </TouchableOpacity>
             ))}
           </View>
         )}
+
         {/* BUTTON */}
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}> Continuer </Text>
@@ -91,6 +112,7 @@ export default function SignupProfile() {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: { flex: 1, paddingHorizontal: 24, backgroundColor: "#fff" },
   form: { marginTop: 80 },
@@ -122,7 +144,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   option: { padding: 14, borderBottomWidth: 1, borderColor: "#eee" },
-
   optionText: { color: COLORS.primary },
   button: {
     marginTop: 40,
