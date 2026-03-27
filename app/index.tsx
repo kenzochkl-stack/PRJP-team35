@@ -5,7 +5,7 @@ export default function Index() {
   const { user } = useAuth();
 
   if (!user) {
-    return <Redirect href="/(shared)/filters" />;
+    return <Redirect href="/(auth)/signup-profile" />;
   }
 
   if (user.role === "teacher") {

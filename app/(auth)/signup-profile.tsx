@@ -1,12 +1,14 @@
+import { useRouter } from "expo-router";
+import { useState } from "react";
 import {
-  View,
+  Image,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
-  Image,
+  View,
 } from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { COLORS } from "../../src/styles/colors";
 
